@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mnehomeapp/core/client_helper.dart';
 import 'package:mnehomeapp/core/extensions.dart';
 import 'package:mnehomeapp/component/bootstrap/home_server_bootstrap.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -16,9 +17,10 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     final mobileMode = widget.renderMobileMode(context);
     return HomeServerBootstrap(() {
+      String title = HomeServerLocalizations.of(context)!.titleDashboard;
       return Scaffold(
         appBar: AppBar(
-          title: const Text('Dashboard'),
+          title: Text(title),
           actions: [
             IconButton(
                 icon: const Icon(Icons.logout),

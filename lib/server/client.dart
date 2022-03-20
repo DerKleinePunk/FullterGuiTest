@@ -9,6 +9,8 @@ import 'http/http_stub.dart'
     if (dart.library.io) 'http/http_app.dart'
     if (dart.library.html) 'http/http_web.dart';
 
+import 'message_stream.dart';
+
 class ServerClient {
   String serverUrl;
   String? username;
@@ -17,6 +19,7 @@ class ServerClient {
   DateTime? lastSessionRequest;
   int ensureSessionsEveryXMinutes = 5;
   CookieSave? cookieSave;
+  ServerMessageClient? messageClient;
 
   final http.Client httpClient = getClient();
 
@@ -98,6 +101,7 @@ class ServerClient {
           ),
         );
       }
+      messageClient = ServerMessageClient(serverUrl);
       return true;
     }
     return false;

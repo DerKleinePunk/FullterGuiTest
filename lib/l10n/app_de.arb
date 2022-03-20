@@ -1,5 +1,6 @@
 {
     "appTitle": "Home Server",
     "titleLoginScreen": "Anmelden",
-    "titleLogin": "Anmelden bei Home Control"
+    "titleLogin": "Anmelden bei Home Control",
+    "titleDashboard": "Schaltzentrale"
 }

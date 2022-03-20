@@ -25,6 +25,7 @@ https://lokalise.com/blog/flutter-i18n/
 https://medium.com/flutter-community/seven-things-you-should-know-before-starting-with-flutter-web-8e48555d819e
 https://www.tutorialspoint.com/flutter/flutter_accessing_rest_api.htm
 https://docs.flutter.dev/testing/errors
+https://github.com/Vanethos/coinbase_sockets
 
 ### Node.js
 https://bigcodenerd.org/enable-cors-node-js-without-express/
