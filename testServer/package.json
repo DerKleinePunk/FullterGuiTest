@@ -1,0 +1,21 @@
+{
+  "name": "mne-home-test-server",
+  "version": "0.0.1",
+  "description": "Server to Test the mne Home Server App",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "DerKleinePunk/webuitest/testserver"
+  },
+  "keywords": [
+    "rest",
+    "server",
+    "websocket"
+  ],
+  "author": "Michael Nenninger",
+  "license": "ISC"
+}
