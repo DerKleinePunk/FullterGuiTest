@@ -1,7 +1,14 @@
+'use strict';
+
 const http = require("http");
+const WebSocketServer = require('ws');
+const staticFile = require('node-static');
 
 const host = 'localhost';
 const port = 8080;
+const wsPath = "/messages";
+
+const file = new staticFile.Server('./pages/');
 
 function parseCookies (request) {
     const list = {};
@@ -24,6 +31,12 @@ const requestListener = async function (req, res) {
     console.log(req.url);
     console.log(req.method);
     console.log(req.headers?.cookie)
+
+    if(req.url == '/pages' && req.method == 'GET') {
+        req.url = 'index.html';
+        req.addListener('end', () => file.serve(req, res)).resume();
+        return;
+    }
 
     if(req.url == '/api/session' && req.method == 'GET') {
         res.setHeader("Content-Type", "application/json");
@@ -73,4 +86,61 @@ const requestListener = async function (req, res) {
 const server = http.createServer(requestListener);
 server.listen(port, host, () => {
     console.log(`Server is running on http://${host}:${port}`);
+});
+
+console.log("Build Websocket Server");
+
+/*
+// We need the same instance of the session parser in express and
+// WebSocket server.
+//
+const sessionParser = session({
+    saveUninitialized: false,
+    secret: '$eCuRiTy',
+    resave: false
+  });*/
+
+//const wss = new WebSocketServer.Server({ port: port, path: wsPath })
+
+const wss = new WebSocketServer.Server({ clientTracking: false, noServer: true })
+
+server.on('upgrade', function (request, socket, head) {
+    //console.log('Parsing session from request...');
+    console.log('Upgrade Socket');
+
+    wss.handleUpgrade(request, socket, head, function (ws) {
+        wss.emit('connection', ws, request);
+    });
+
+    /*sessionParser(request, {}, () => {
+      if (!request.session.userId) {
+        socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
+        socket.destroy();
+        return;
+      }
+  
+      console.log('Session is parsed!');
+  
+      wss.handleUpgrade(request, socket, head, function (ws) {
+        wss.emit('connection', ws, request);
+      });
+    });*/
+  });
+
+  
+// Creating connection using websocket
+wss.on("connection", ws => {
+    console.log("new client connected");
+    // sending message
+    ws.on("message", data => {
+        console.log(`Client has sent us: ${data}`)
+    });
+    // handling what to do when clients disconnects from server
+    ws.on("close", () => {
+        console.log("the client has connected");
+    });
+    // handling client connection error
+    ws.onerror = function () {
+        console.log("Some Error occurred")
+    }
 });

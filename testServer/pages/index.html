@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>WebSocket Example</title>
+    <script>
+        const ws = new WebSocket("ws://localhost:8080/messages");
+        ws.addEventListener("open", () =>{
+          console.log("We are connected");
+          ws.send("How are you?");
+        });
+    </script>
+  </head>
+  <body>
+    <h1>WebSocket Example</h1>
+    <p>Open your browser's developer tools to see client/server activity.</p>
+  </body>
+</html>

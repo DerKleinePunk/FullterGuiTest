@@ -17,13 +17,19 @@ samples, guidance on mobile development, and a full API reference.
 
 
 ## Infos
+
+### Flutter
 https://github.com/Dev-Owl/Caladrius/blob/main/lib/pillowdart/client.dart
 https://phrase.com/blog/posts/flutter-localization/
 https://lokalise.com/blog/flutter-i18n/
 https://medium.com/flutter-community/seven-things-you-should-know-before-starting-with-flutter-web-8e48555d819e
 https://www.tutorialspoint.com/flutter/flutter_accessing_rest_api.htm
 https://docs.flutter.dev/testing/errors
+
+### Node.js
 https://bigcodenerd.org/enable-cors-node-js-without-express/
+https://github.com/websockets/ws/blob/master/examples/express-session-parse/index.js
 
 ## Test Server
-http-server . -p 8080 
+node server.js
+It it becase the Reals server ist noch running on Windows see [Server](https://github.com/DerKleinePunk/AnOtherAutomationServer)
