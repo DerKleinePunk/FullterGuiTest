@@ -11,7 +11,7 @@ const wsPath = "/messages";
 const file = new FileServer('./pages/');
 
 function parseCookies (request) {
-    const list = {};
+    const list = [];
     var cookieHeader = request.headers?.cookie;
     
     if (!cookieHeader) return list;
@@ -58,6 +58,9 @@ const requestListener = async function (req, res) {
             res.writeHead(404);
             res.end();
         } else if(listCookies['SessionId'] == '') {
+            res.writeHead(404);
+            res.end();
+        } else if(Array.isArray(listCookies) && listCookies.length == 0) {
             res.writeHead(404);
             res.end();
         } else {
