@@ -12,8 +12,17 @@ const file = new FileServer('./pages/');
 
 function parseCookies (request) {
     const list = {};
-    const cookieHeader = request.headers?.cookie;
+    var cookieHeader = request.headers?.cookie;
+    
     if (!cookieHeader) return list;
+
+    if (typeof cookieHeader !== 'string') {
+        return list;
+    }
+
+    if(cookieHeader.slice(-1) !== ';') {
+        cookieHeader += ';';
+    }
 
     cookieHeader.split(`;`).forEach(function(cookie) {
         let [ name, ...rest] = cookie.split(`=`);
@@ -76,7 +85,26 @@ const requestListener = async function (req, res) {
             res.writeHead(404);
         }
         res.end();
-    }else {
+    } else if(req.url == '/api/session' && req.method == 'OPTIONS') {
+        res.setHeader("Allow", "DELETE, POST, GET");
+        res.setHeader("Access-Control-Allow-Origin", "http://localhost:8000");
+        res.setHeader("Access-Control-Allow-Credentials", "true");
+        res.setHeader("Access-Control-Allow-Methods", "DELETE, POST, GET");
+        res.writeHead(204); // No Content
+        res.end();
+    } else if(req.url == '/api/session' && req.method == 'DELETE') {
+        const listCookies = parseCookies(req);
+        if(Array.isArray(listCookies)) {
+            console.log(listCookies['SessionId']);
+        } else {
+            console.log("no Cookie");
+        }
+        res.setHeader("Access-Control-Allow-Origin", "http://localhost:8000");
+        res.setHeader("Access-Control-Allow-Credentials", "true");
+        res.setHeader("Access-Control-Allow-Methods", "DELETE, POST, GET");
+        res.writeHead(200);
+        res.end();
+    } else {
         res.setHeader("Content-Type", "application/json");
         res.writeHead(200);
         res.end(`{"message": "This is a JSON response"}`);
@@ -144,7 +172,7 @@ wss.on("connection", ws => {
     });
     // handling what to do when clients disconnects from server
     ws.on("close", () => {
-        console.log("the client has connected");
+        console.log("the client has disconnected");
     });
     // handling client connection error
     ws.onerror = function () {

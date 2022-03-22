@@ -133,14 +133,17 @@ class ServerClient {
   }
 
   Future removeSessionIfExists() async {
-    /* if (httpClient is BrowserClient) {
-      //Running in the web -> checking cookie not so easy as its http
-      //No luck from JS in this case
-      (httpClient as BrowserClient).withCredentials = true;
-    }*/
-    await httpClient.delete(
-      HomeServerEndpoints.combine(serverUrl, HomeServerEndpoints.session),
-    );
+    try
+    {
+      await httpClient.delete(
+        HomeServerEndpoints.combine(serverUrl, HomeServerEndpoints.session),
+      );
+    }  on FormatException catch (exp) {
+      print(exp.message);
+    } catch (exp) {
+      print(exp.toString());
+    }
+    messageClient?.close();
     username = null;
     password = null;
   }
