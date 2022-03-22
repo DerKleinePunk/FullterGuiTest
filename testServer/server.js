@@ -1,14 +1,14 @@
 'use strict';
 
-const http = require("http");
-const WebSocketServer = require('ws');
-const staticFile = require('node-static');
+import { createServer } from "http";
+import WebSocket, { WebSocketServer } from 'ws';
+import { Server as FileServer } from 'node-static';
 
 const host = 'localhost';
 const port = 8080;
 const wsPath = "/messages";
 
-const file = new staticFile.Server('./pages/');
+const file = new FileServer('./pages/');
 
 function parseCookies (request) {
     const list = {};
@@ -83,7 +83,7 @@ const requestListener = async function (req, res) {
     }
 };
 
-const server = http.createServer(requestListener);
+const server = createServer(requestListener);
 server.listen(port, host, () => {
     console.log(`Server is running on http://${host}:${port}`);
 });
@@ -102,7 +102,8 @@ const sessionParser = session({
 
 //const wss = new WebSocketServer.Server({ port: port, path: wsPath })
 
-const wss = new WebSocketServer.Server({ clientTracking: false, noServer: true })
+//clientTracking: false das für als parameter das zu das der wss keine Clients kennt undefined
+const wss = new WebSocketServer({ noServer: true })
 
 server.on('upgrade', function (request, socket, head) {
     //console.log('Parsing session from request...');
@@ -132,8 +133,14 @@ server.on('upgrade', function (request, socket, head) {
 wss.on("connection", ws => {
     console.log("new client connected");
     // sending message
-    ws.on("message", data => {
-        console.log(`Client has sent us: ${data}`)
+    ws.on("message", function message(data, isBinary) {
+        console.log(`Client has sent us: ${data}`);
+        //Echo all
+        wss.clients.forEach(function each(client) {
+            if (client.readyState === WebSocket.OPEN) {
+              client.send(data, { binary: isBinary });
+            }
+          });
     });
     // handling what to do when clients disconnects from server
     ws.on("close", () => {

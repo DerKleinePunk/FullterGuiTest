@@ -8,10 +8,24 @@
           console.log("We are connected");
           ws.send("How are you?");
         });
+        ws.onmessage = function got_packet(msg) {
+          document.getElementById("messageIn").value =
+          document.getElementById("messageIn").value + msg.data + "\n";
+          document.getElementById("messageIn").scrollTop =
+          document.getElementById("messageIn").scrollHeight;
+        };
+        function SendText() {
+          ws.send(document.getElementById("messageOut").value);
+          document.getElementById("messageOut").value = "";
+        }
     </script>
   </head>
   <body>
     <h1>WebSocket Example</h1>
     <p>Open your browser's developer tools to see client/server activity.</p>
+    <input type="text" id=messageOut cols=240 rows=1>
+    <button id=SendButton onclick="SendText()">Send</button><br>
+    <h2>from Server</h2>
+    <textarea id=messageIn readonly cols=40 rows=10></textarea><br>
   </body>
 </html>
