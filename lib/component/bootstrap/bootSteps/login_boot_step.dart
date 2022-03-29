@@ -11,8 +11,7 @@ class LoginBootStep extends BootstrapStep {
 
   @override
   Widget buildStep(BootstrapController controller) {
-    
-    return Login( controller: controller);
+    return Login(controller: controller);
   }
 
   @override
@@ -41,9 +40,9 @@ class LoginBootStep extends BootstrapStep {
       } else {
         details = _getAuthDetails(prefs);
       }
-      if (serverUrl != null && (details?.present ?? false)) {
+      if (serverUrl != null && details.present) {
         CoreClientHelper.initClient(serverUrl,
-            username: details?.user, password: details?.password);
+            username: details.user, password: details.password);
       }
     }
     //Check if client was created and has configuration for login

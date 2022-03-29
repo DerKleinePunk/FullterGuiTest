@@ -3,15 +3,25 @@ import 'core/router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:flutter/foundation.dart';
 
 late SharedPreferences preferences;
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  var packageInfo = await PackageInfo.fromPlatform();
+  var version =  "${packageInfo.packageName} ${packageInfo.version} (${packageInfo.buildNumber})";
+  debugPrint = (String? message, {int? wrapWidth}) => debugPrintSynchronouslyWithText(message, version, wrapWidth: wrapWidth);
   SharedPreferences.getInstance().then((instance) {
     preferences = instance;
     runApp(const MyApp());
   });
+}
+
+void debugPrintSynchronouslyWithText(String? message, String version, {int? wrapWidth}) {
+  message = "[${DateTime.now()} - $version]: $message";
+  debugPrintSynchronously(message, wrapWidth: wrapWidth);
 }
 
 class MyApp extends StatelessWidget {

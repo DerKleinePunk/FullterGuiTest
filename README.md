@@ -26,6 +26,8 @@ https://medium.com/flutter-community/seven-things-you-should-know-before-startin
 https://www.tutorialspoint.com/flutter/flutter_accessing_rest_api.htm
 https://docs.flutter.dev/testing/errors
 https://github.com/Vanethos/coinbase_sockets
+https://medium.com/flutter-community/debugprint-and-the-power-of-hiding-and-customizing-your-logs-in-dart-86881df05929
+https://medium.com/@bahadur.vaibhav/chat-app-with-flutter-websocket-850696488488
 
 ### Node.js
 https://bigcodenerd.org/enable-cors-node-js-without-express/
@@ -34,3 +36,5 @@ https://github.com/websockets/ws/blob/master/examples/express-session-parse/inde
 ## Test Server
 node server.js
 It it becase the Reals server ist noch running on Windows see [Server](https://github.com/DerKleinePunk/AnOtherAutomationServer)
+
+http://localhost:8080/pages Call Test Page for Websocket Server

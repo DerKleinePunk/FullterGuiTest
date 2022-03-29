@@ -1,5 +1,5 @@
 //https://github.com/Dev-Owl/Caladrius/blob/main/lib/pillowdart/client.dart
-import 'package:flutter/foundation.dart' show kIsWeb; //kIsWeb true if Webapp
+import 'package:flutter/foundation.dart'; //kIsWeb true if Webapp
 import 'package:http/http.dart' as http;
 import 'package:mnehomeapp/server/cookie_save.dart';
 import 'dart:convert';
@@ -19,7 +19,7 @@ class ServerClient {
   DateTime? lastSessionRequest;
   int ensureSessionsEveryXMinutes = 5;
   CookieSave? cookieSave;
-  ServerMessageClient? messageClient;
+  ServerMessageClient? _messageClient;
 
   final http.Client httpClient = getClient();
 
@@ -101,7 +101,7 @@ class ServerClient {
           ),
         );
       }
-      messageClient = ServerMessageClient(serverUrl);
+      _messageClient = ServerMessageClient(serverUrl);
       return true;
     }
     return false;
@@ -139,13 +139,37 @@ class ServerClient {
         HomeServerEndpoints.combine(serverUrl, HomeServerEndpoints.session),
       );
     }  on FormatException catch (exp) {
-      print(exp.message);
+      debugPrint(exp.message);
     } catch (exp) {
-      print(exp.toString());
+      debugPrint(exp.toString());
     }
-    messageClient?.close();
+    _messageClient?.close();
     username = null;
     password = null;
+  }
+
+  addListener(Function callback) {
+    if(_messageClient == null) {
+      debugPrint("messageClient is null");
+    } else {
+      _messageClient?.addListener(callback);
+    }
+  }
+
+  removeListener(Function callback) {
+    if(_messageClient == null) {
+      debugPrint("messageClient is null");
+    } else {
+      _messageClient?.removeListener(callback);
+    }
+  }
+
+  sendMsg(String message) {
+    if(_messageClient == null) {
+      debugPrint("messageClient is null");
+    } else {
+      _messageClient?.sendMsg(message);
+    }
   }
 }
 
