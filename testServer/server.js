@@ -115,9 +115,9 @@ const requestListener = async function (req, res) {
         //res.setHeader("Content-Type", "audio/mpeg");
         req.url = req.url.substring(11);
         console.log("try send file " + req.url);
-        res.setHeader("Access-Control-Allow-Origin", "http://localhost:8000");
+        /*res.setHeader("Access-Control-Allow-Origin", "http://localhost:8000");
         res.setHeader("Access-Control-Allow-Credentials", "true");
-        res.setHeader("Access-Control-Allow-Methods", "DELETE, POST, GET");
+        res.setHeader("Access-Control-Allow-Methods", "DELETE, POST, GET");*/
         req.addListener('end', () => fileResources.serve(req, res)).resume();
         return;
     } else {
