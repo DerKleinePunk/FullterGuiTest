@@ -57,7 +57,7 @@ class AppRouter {
   }
   
   static PageRoute _default(RoutingData data) {
-    return bootstrapRoute(() => Dashboard(), data);
+    return bootstrapRoute(() => const Dashboard(), data);
   }
 }
 

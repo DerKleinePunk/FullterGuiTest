@@ -3,20 +3,51 @@
   <head>
     <title>WebSocket Example</title>
     <script>
-        const ws = new WebSocket("ws://localhost:8080/messages");
-        ws.addEventListener("open", () =>{
-          console.log("We are connected");
-          ws.send("How are you?");
-        });
-        ws.onmessage = function got_packet(msg) {
-          document.getElementById("messageIn").value =
-          document.getElementById("messageIn").value + msg.data + "\n";
-          document.getElementById("messageIn").scrollTop =
-          document.getElementById("messageIn").scrollHeight;
-        };
+        var ws;
+        sendLogin();
+        function ConnectWebSocket() {
+          ws = new WebSocket("ws://localhost:8080/messages");
+          ws.addEventListener("open", () =>{
+            console.log("We are connected");
+            ws.send("How are you?");
+          });
+          ws.onmessage = function got_packet(msg) {
+            document.getElementById("messageIn").value =
+            document.getElementById("messageIn").value + msg.data + "\n";
+            document.getElementById("messageIn").scrollTop = 
+            document.getElementById("messageIn").scrollHeight;
+          };
+        }
         function SendText() {
           ws.send(document.getElementById("messageOut").value);
           document.getElementById("messageOut").value = "";
+        }
+        function sendLogin() {
+          var xhttp = new XMLHttpRequest();
+          xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+              //document.getElementById("getResponse").innerHTML = this.responseText;
+              ConnectWebSocket();
+            }
+            if (this.readyState == 4 && this.status == 201) {
+              var result = JSON.parse(this.responseText);
+              //Todo Find Working way
+              /*var browser=window.browser||window.chrome;
+              browser.cookies.set({
+                name: "X-API-KEY",
+                value: result.token
+                });
+              */
+              //document.cookie = "X-API-KEY=123456789;SameSite=Strict;path=/";
+              //createSubscriber();
+            }
+          };
+          xhttp.open("POST", "/api/session", true);
+          xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+          var obj = new Object();
+          obj.name = "Webpage";
+          obj.pass = "empty";
+          xhttp.send(JSON.stringify(obj));
         }
     </script>
   </head>

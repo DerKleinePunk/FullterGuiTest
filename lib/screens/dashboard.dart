@@ -9,7 +9,6 @@ class Dashboard extends StatefulWidget {
 
   @override
   _DashboardState createState() => _DashboardState();
-  
 }
 
 class _DashboardState extends State<Dashboard> {
@@ -29,7 +28,6 @@ class _DashboardState extends State<Dashboard> {
     final mobileMode = widget.renderMobileMode(context);
     return HomeServerBootstrap(() {
       String title = HomeServerLocalizations.of(context)!.titleDashboard;
-      
 
       return Scaffold(
         appBar: AppBar(
@@ -63,8 +61,7 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget? dashboardBody() {
-    return Container(
-        child: Stack(
+    return Stack(
       children: [
         Positioned(
             top: 0,
@@ -72,12 +69,11 @@ class _DashboardState extends State<Dashboard> {
             left: 0,
             right: 0,
             child: Container(
-                padding: EdgeInsets.all(15),
+                padding: const EdgeInsets.all(15),
                 child: SingleChildScrollView(
                     child: Column(
                   children: [
-                    Container(
-                        child: Column(
+                    Column(
                       children: msglist.map((onemsg) {
                         return Container(
                             margin: EdgeInsets.only(
@@ -93,27 +89,27 @@ class _DashboardState extends State<Dashboard> {
                                 //if its my message then, blue background else red background
                                 child: Container(
                                   width: double.infinity,
-                                  padding: EdgeInsets.all(15),
+                                  padding: const EdgeInsets.all(15),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
+                                      Text(onemsg.isme
+                                          ? "ID: ME"
+                                          : "ID: " + onemsg.userid),
                                       Container(
-                                          child: Text(onemsg.isme
-                                              ? "ID: ME"
-                                              : "ID: " + onemsg.userid)),
-                                      Container(
-                                        margin: EdgeInsets.only(
+                                        margin: const EdgeInsets.only(
                                             top: 10, bottom: 10),
                                         child: Text(
                                             "Message: " + onemsg.msgtext,
-                                            style: TextStyle(fontSize: 17)),
+                                            style:
+                                                const TextStyle(fontSize: 17)),
                                       ),
                                     ],
                                   ),
                                 )));
                       }).toList(),
-                    ))
+                    )
                   ],
                 )))),
         Positioned(
@@ -127,31 +123,38 @@ class _DashboardState extends State<Dashboard> {
                 children: [
                   Expanded(
                       child: Container(
-                    margin: EdgeInsets.all(10),
+                    margin: const EdgeInsets.all(10),
                     child: TextField(
                       controller: msgtext,
                       decoration:
-                          InputDecoration(hintText: "Enter your Message"),
+                          const InputDecoration(hintText: "Enter your Message"),
                     ),
                   )),
                   Container(
-                      margin: EdgeInsets.all(10),
+                      margin: const EdgeInsets.all(10),
                       child: ElevatedButton(
-                        child: Icon(Icons.send),
-                        onPressed: () {
-                          if (msgtext.text != "") {
-                            sendmsg(msgtext.text); //send message with webspcket
-                            msgtext.text = "";
-                          } else {
-                            debugPrint("No Message no Send");
-                          }
-                        },
-                      ))
+                          child: const Icon(Icons.send),
+                          onPressed: () {
+                            if (msgtext.text != "") {
+                              sendmsg(
+                                  msgtext.text); //send message with webspcket
+                              msgtext.text = "";
+                            } else {
+                              debugPrint("No Message no Send");
+                            }
+                          })),
+                  Container(
+                      margin: const EdgeInsets.all(10),
+                      child: ElevatedButton(
+                          child: const Icon(Icons.play_arrow),
+                          onPressed: () {
+                            _playAudio();
+                          }))
                 ],
               )),
         )
       ],
-    ));
+    );
   }
 
   _onWebSocketMessage(String wath, String message) {
@@ -171,6 +174,10 @@ class _DashboardState extends State<Dashboard> {
   void sendmsg(String text) {
     CoreClientHelper.getClient().sendMsg(text);
     msglist.add(MessageData(text, "", true));
+  }
+
+  void _playAudio() {
+    CoreClientHelper.getClient().play("resources/musik.mp3");
   }
 } // Class
 

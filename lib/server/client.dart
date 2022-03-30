@@ -10,6 +10,7 @@ import 'http/http_stub.dart'
     if (dart.library.html) 'http/http_web.dart';
 
 import 'message_stream.dart';
+import '../core/audioplayer.dart';
 
 class ServerClient {
   String serverUrl;
@@ -20,6 +21,7 @@ class ServerClient {
   int ensureSessionsEveryXMinutes = 5;
   CookieSave? cookieSave;
   ServerMessageClient? _messageClient;
+  AudioPlayerService? _audioPlayerService;
 
   final http.Client httpClient = getClient();
 
@@ -102,6 +104,8 @@ class ServerClient {
         );
       }
       _messageClient = ServerMessageClient(serverUrl);
+      _audioPlayerService = AudioPlayerService(this);
+      _audioPlayerService!.init();
       return true;
     }
     return false;
@@ -133,23 +137,23 @@ class ServerClient {
   }
 
   Future removeSessionIfExists() async {
-    try
-    {
+    try {
       await httpClient.delete(
         HomeServerEndpoints.combine(serverUrl, HomeServerEndpoints.session),
       );
-    }  on FormatException catch (exp) {
+    } on FormatException catch (exp) {
       debugPrint(exp.message);
     } catch (exp) {
       debugPrint(exp.toString());
     }
     _messageClient?.close();
+    _audioPlayerService?.dispose();
     username = null;
     password = null;
   }
 
   addListener(Function callback) {
-    if(_messageClient == null) {
+    if (_messageClient == null) {
       debugPrint("messageClient is null");
     } else {
       _messageClient?.addListener(callback);
@@ -157,7 +161,7 @@ class ServerClient {
   }
 
   removeListener(Function callback) {
-    if(_messageClient == null) {
+    if (_messageClient == null) {
       debugPrint("messageClient is null");
     } else {
       _messageClient?.removeListener(callback);
@@ -165,10 +169,19 @@ class ServerClient {
   }
 
   sendMsg(String message) {
-    if(_messageClient == null) {
+    if (_messageClient == null) {
       debugPrint("messageClient is null");
     } else {
       _messageClient?.sendMsg(message);
+    }
+  }
+
+  play(String audioFile) {
+    final uri = HomeServerEndpoints.combine(serverUrl, audioFile);
+    if (_audioPlayerService == null) {
+      debugPrint("_audioPlayerService is null");
+    } else {
+      _audioPlayerService?.play(uri.toString());
     }
   }
 }

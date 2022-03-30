@@ -19,8 +19,8 @@ samples, guidance on mobile development, and a full API reference.
 ## Infos
 
 ### Flutter
-https://github.com/Dev-Owl/Caladrius/blob/main/lib/pillowdart/client.dart
-https://phrase.com/blog/posts/flutter-localization/
+[client.dart](https://github.com/Dev-Owl/Caladrius/blob/main/lib/pillowdart/client.dart)
+[flutter-localization](https://phrase.com/blog/posts/flutter-localization/)
 https://lokalise.com/blog/flutter-i18n/
 https://medium.com/flutter-community/seven-things-you-should-know-before-starting-with-flutter-web-8e48555d819e
 https://www.tutorialspoint.com/flutter/flutter_accessing_rest_api.htm
@@ -38,3 +38,10 @@ node server.js
 It it becase the Reals server ist noch running on Windows see [Server](https://github.com/DerKleinePunk/AnOtherAutomationServer)
 
 http://localhost:8080/pages Call Test Page for Websocket Server
+
+## Todo
+Local Notification Plugin
+
+## Internal Messages
+
+* Play Nofication sound in app { "action" : "playSound" }

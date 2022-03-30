@@ -38,7 +38,7 @@ class _BootStrapState extends State<BootStrap> implements BootstrapController {
           if (snap.hasData) {
             return snap.data!;
           }
-          return Scaffold(
+          return const Scaffold(
             body: Center(
               child: CircularProgressIndicator(),
             ),

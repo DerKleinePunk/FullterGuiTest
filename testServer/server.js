@@ -9,6 +9,7 @@ const port = 8080;
 const wsPath = "/messages";
 
 const file = new FileServer('./pages/');
+const fileResources = new FileServer('./resources/');
 
 function parseCookies (request) {
     const list = [];
@@ -82,7 +83,10 @@ const requestListener = async function (req, res) {
         res.setHeader("Access-Control-Allow-Credentials", "true");
         res.setHeader("Access-Control-Allow-Methods", "DELETE, POST, GET");
         if(JSON.parse(data).name == 'admin'){
-            res.setHeader("Set-Cookie", "SessionId=789");
+            res.setHeader("Set-Cookie", "SessionId=789;SameSite=Strict;Path=/;");
+            res.writeHead(200);
+        } else if(JSON.parse(data).name == 'Webpage'){
+            res.setHeader("Set-Cookie", "SessionId=999;SameSite=Strict;Path=/;");
             res.writeHead(200);
         } else {
             res.writeHead(404);
@@ -107,6 +111,15 @@ const requestListener = async function (req, res) {
         res.setHeader("Access-Control-Allow-Methods", "DELETE, POST, GET");
         res.writeHead(200);
         res.end();
+    } else if(req.url.substring(0, 11) == '/resources/') {
+        //res.setHeader("Content-Type", "audio/mpeg");
+        req.url = req.url.substring(11);
+        console.log("try send file " + req.url);
+        res.setHeader("Access-Control-Allow-Origin", "http://localhost:8000");
+        res.setHeader("Access-Control-Allow-Credentials", "true");
+        res.setHeader("Access-Control-Allow-Methods", "DELETE, POST, GET");
+        req.addListener('end', () => fileResources.serve(req, res)).resume();
+        return;
     } else {
         res.setHeader("Content-Type", "application/json");
         res.writeHead(200);
