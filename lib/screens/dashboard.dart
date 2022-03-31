@@ -1,9 +1,10 @@
-import 'package:audioplayers/src/api/player_state.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:mnehomeapp/core/client_helper.dart';
 import 'package:mnehomeapp/core/extensions.dart';
 import 'package:mnehomeapp/component/bootstrap/home_server_bootstrap.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../component/widget/third_party/adaptive_scaffold.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -13,11 +14,12 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  int _pageIndex = 0;
   final List<MessageData> _msglist = [];
 
   final TextEditingController _msgtext = TextEditingController();
   bool _isPlaying = false;
-
+  
   @override
   void initState() {
     _msgtext.text = "";
@@ -27,6 +29,53 @@ class _DashboardState extends State<Dashboard> {
   }
 
   @override
+  Widget build(BuildContext context) {
+    String title = HomeServerLocalizations.of(context)!.titleDashboard;
+    return AdaptiveScaffold(
+      title: Text(title),
+      actions: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed:() async {
+                  await CoreClientHelper.getClient().removeSessionIfExists();
+                  await CoreClientHelper.clearAuthStorage();
+                  await Navigator.of(context).pushReplacementNamed('dashboard');
+                }
+          ),
+        ),
+      ],
+      currentIndex: _pageIndex,
+      destinations: const [
+        AdaptiveScaffoldDestination(title: 'Home', icon: Icons.home),
+        AdaptiveScaffoldDestination(title: 'Entries', icon: Icons.list),
+        AdaptiveScaffoldDestination(title: 'Settings', icon: Icons.settings),
+      ],
+      body: _pageAtIndex(_pageIndex),
+      onNavigationIndexChange: (newIndex) {
+        setState(() {
+          _pageIndex = newIndex;
+        });
+      },
+      floatingActionButton: null
+          //_hasFloatingActionButton ? _buildFab(context) : null,
+    );
+  }
+
+  Widget _pageAtIndex(int index) {
+    if (index == 0) {
+      return dashboardBody();
+    }
+
+    /*if (index == 1) {
+      return const EntriesPage();
+    }*/
+
+    return const Center(child: Text('Settings page'));
+  }
+
+  /*@override
   Widget build(BuildContext context) {
     final mobileMode = widget.renderMobileMode(context);
     return HomeServerBootstrap(() {
@@ -61,9 +110,9 @@ class _DashboardState extends State<Dashboard> {
             : null,
       );
     });
-  }
+  }*/
 
-  Widget? dashboardBody() {
+  Widget dashboardBody() {
     return Stack(
       children: [
         Positioned(
