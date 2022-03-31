@@ -6,15 +6,21 @@ import 'package:audioplayers/audioplayers.dart';
 import '../server/client.dart';
 import 'package:flutter/foundation.dart';
 
+typedef OnPlayerStateCallback = void Function(PlayerState state);
+
 class AudioPlayerService {
   final ServerClient _serverClient;
   late AudioPlayer _audioPlayer;
   late AudioPlayer _audioPlayerNotification;
-  //late AudioCache _audioCache;
+  late AudioCache _audioCache;
   int _maxduration = 0;
   int _currentDuration = 0;
   int _maxdurationNotification = 0;
   int _currentDurationNotification = 0;
+  final ObserverList<OnPlayerStateCallback> _listenersPlayer =
+      ObserverList<OnPlayerStateCallback>();
+  final ObserverList<OnPlayerStateCallback> _listenersPlayerNotification =
+      ObserverList<OnPlayerStateCallback>();
 
   AudioPlayerService(this._serverClient);
 
@@ -27,11 +33,11 @@ class AudioPlayerService {
         playerId: 'mneHomeAppPLayerNotification');
     _audioPlayer
         .setReleaseMode(ReleaseMode.STOP); // set release mode so that it never
-    //_audioCache = AudioCache(fixedPlayer: _audioPlayerNotification);
+    _audioCache = AudioCache(fixedPlayer: _audioPlayerNotification);
     if (!kIsWeb) {
       // Calls to Platform.isIOS fails on web
       if (Platform.isIOS) {
-        //_audioCache.fixedPlayer?.notificationService.startHeadlessService();
+        _audioCache.fixedPlayer?.notificationService.startHeadlessService();
       }
     }
     Logger.changeLogLevel(LogLevel.INFO);
@@ -51,8 +57,41 @@ class AudioPlayerService {
       _updateDurationNotification();
     });
 
-    _audioPlayer.onPlayerStateChanged
-        .listen((PlayerState s) => {debugPrint('Current player state: $s')});
+    _audioPlayer.onPlayerStateChanged.listen((PlayerState s) {
+      debugPrint('Current player state: $s');
+      switch (s) {
+        case PlayerState.STOPPED:
+          _audioPlayerStopped();
+          break;
+        case PlayerState.PLAYING:
+          _audioPlayerPlaying();
+          break;
+        case PlayerState.PAUSED:
+          _audioPlayerPaused();
+          break;
+        case PlayerState.COMPLETED:
+          // TODO: Handle this case.
+          break;
+      }
+    });
+
+    _audioPlayerNotification.onPlayerStateChanged.listen((PlayerState s) {
+      debugPrint('Current player state: $s');
+      switch (s) {
+        case PlayerState.STOPPED:
+          _audioPlayerNotificationStopped();
+          break;
+        case PlayerState.PLAYING:
+          // TODO: Handle this case.
+          break;
+        case PlayerState.PAUSED:
+          _audioPlayerNotificationPaused();
+          break;
+        case PlayerState.COMPLETED:
+          // TODO: Handle this case.
+          break;
+      }
+    });
 
     _audioPlayer.onPlayerCompletion.listen((event) {
       debugPrint("PlayerCompletion");
@@ -78,42 +117,15 @@ class AudioPlayerService {
   }
 
   void _playNotification() async {
-    //final uri = await _audioCache.load('');
-    /*int result = await _audioPlayer
-        .setUrl('http://localhost:8000/rainforest-ambient.mp3');
-    if (result == 1) {
-      debugPrint("Sound loading successfull");
-    } else {
-      debugPrint("Error loading sound");
-    }
-    result = await _audioPlayer.resume();
-    if (result == 1) {
-      debugPrint("Sound playing successfull");
-    } else {
-      debugPrint("Error while playing sound");
-    }*/
+    final uri =
+        await _audioCache.load("http://localhost:8000/rainforest-ambient.mp3");
 
     if (_audioPlayer.state == PlayerState.PLAYING) {
       _audioPlayer.setVolume(0.5);
     }
 
-    /*_audioCache.play("http://localhost:8000/rainforest-ambient.mp3",
-        isNotification: true);*/
-    int result = await _audioPlayerNotification
-        .setUrl("http://localhost:8000/rainforest-ambient.mp3");
-    if (result == 1) {
-      debugPrint("Sound loading successfull");
-    } else {
-      debugPrint("Error loading sound");
-    }
-
     _maxdurationNotification = 0;
-    result = await _audioPlayerNotification.resume();
-    if (result == 1) {
-      debugPrint("Sound playing successfull");
-    } else {
-      debugPrint("Error while playing sound");
-    }
+    await _audioCache.play(uri.toString(), isNotification: true);
 
     debugPrint("playing sound notification");
   }
@@ -150,7 +162,7 @@ class AudioPlayerService {
     double ready = ((_currentDuration / _maxduration) * 100);
     debugPrint("played " + ready.toString());
     if (ready == 100) {
-      //_audioPlayer.stop();
+      await _audioPlayer.stop();
     }
   }
 
@@ -167,5 +179,37 @@ class AudioPlayerService {
         _audioPlayer.setVolume(1);
       }
     }
+  }
+
+  void _audioPlayerNotificationStopped() async {
+    _maxdurationNotification = 0;
+    for (var callback in _listenersPlayerNotification) {
+      callback(PlayerState.STOPPED);
+    }
+  }
+
+  void _audioPlayerNotificationPaused() async {}
+
+  void _audioPlayerPlaying() async {
+    for (var callback in _listenersPlayer) {
+      callback(PlayerState.PLAYING);
+    }
+  }
+
+  void _audioPlayerStopped() async {
+    _maxduration = 0;
+    for (var callback in _listenersPlayer) {
+      callback(PlayerState.STOPPED);
+    }
+  }
+
+  void _audioPlayerPaused() async {}
+
+  void addListnerPlayerState(OnPlayerStateCallback callback) {
+    _listenersPlayer.add(callback);
+  }
+
+  void removeListnerPlayerState(OnPlayerStateCallback callback) {
+    _listenersPlayer.remove(callback);
   }
 }

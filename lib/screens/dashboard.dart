@@ -1,3 +1,4 @@
+import 'package:audioplayers/src/api/player_state.dart';
 import 'package:flutter/material.dart';
 import 'package:mnehomeapp/core/client_helper.dart';
 import 'package:mnehomeapp/core/extensions.dart';
@@ -12,14 +13,16 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  List<MessageData> msglist = [];
+  final List<MessageData> _msglist = [];
 
-  TextEditingController msgtext = TextEditingController();
+  final TextEditingController _msgtext = TextEditingController();
+  bool _isPlaying = false;
 
   @override
   void initState() {
-    msgtext.text = "";
+    _msgtext.text = "";
     CoreClientHelper.getClient().addListener(_onWebSocketMessage);
+    CoreClientHelper.getClient().addListnerPlayerState(_onPLayerState);
     super.initState();
   }
 
@@ -74,7 +77,7 @@ class _DashboardState extends State<Dashboard> {
                     child: Column(
                   children: [
                     Column(
-                      children: msglist.map((onemsg) {
+                      children: _msglist.map((onemsg) {
                         return Container(
                             margin: EdgeInsets.only(
                               //if is my message, then it has margin 40 at left
@@ -125,7 +128,7 @@ class _DashboardState extends State<Dashboard> {
                       child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
-                      controller: msgtext,
+                      controller: _msgtext,
                       decoration:
                           const InputDecoration(hintText: "Enter your Message"),
                     ),
@@ -135,10 +138,10 @@ class _DashboardState extends State<Dashboard> {
                       child: ElevatedButton(
                           child: const Icon(Icons.send),
                           onPressed: () {
-                            if (msgtext.text != "") {
+                            if (_msgtext.text != "") {
                               sendmsg(
-                                  msgtext.text); //send message with webspcket
-                              msgtext.text = "";
+                                  _msgtext.text); //send message with webspcket
+                              _msgtext.text = "";
                             } else {
                               debugPrint("No Message no Send");
                             }
@@ -146,9 +149,11 @@ class _DashboardState extends State<Dashboard> {
                   Container(
                       margin: const EdgeInsets.all(10),
                       child: ElevatedButton(
-                          child: const Icon(Icons.play_arrow),
+                          child: Icon(!_isPlaying
+                              ? Icons.play_circle
+                              : Icons.stop_circle),
                           onPressed: () {
-                            _playAudio();
+                            !_isPlaying ? _playAudio() : _pauseAudio();
                           }))
                 ],
               )),
@@ -160,7 +165,7 @@ class _DashboardState extends State<Dashboard> {
   _onWebSocketMessage(String wath, String message) {
     debugPrint("Dashboard Websocket " + wath + " " + message);
     if (wath == "Text") {
-      msglist.add(MessageData(message, "", false));
+      _msglist.add(MessageData(message, "", false));
       setState(() {});
     }
   }
@@ -173,11 +178,25 @@ class _DashboardState extends State<Dashboard> {
 
   void sendmsg(String text) {
     CoreClientHelper.getClient().sendMsg(text);
-    msglist.add(MessageData(text, "", true));
+    _msglist.add(MessageData(text, "", true));
   }
 
   void _playAudio() {
     CoreClientHelper.getClient().play("resources/musik.mp3");
+  }
+
+  void _pauseAudio() {
+    //TODO Implement
+  }
+
+  void _onPLayerState(PlayerState state) {
+    if (state == PlayerState.STOPPED) {
+      _isPlaying = false;
+      setState(() {});
+    } else if (state == PlayerState.PLAYING) {
+      _isPlaying = true;
+      setState(() {});
+    }
   }
 } // Class
 

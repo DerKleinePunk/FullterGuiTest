@@ -2,11 +2,13 @@ import 'package:flutter/foundation.dart';
 import 'http/websocket_client_stup.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
+typedef OnMessageCallback = void Function(String type, String message);
+
 class ServerMessageClient {
   WebSocketChannel? _channel; // =
   bool _connected = false;
 
-  final ObserverList<Function> _listeners = ObserverList<Function>();
+  final ObserverList<OnMessageCallback> _listeners = ObserverList<OnMessageCallback>();
 
   ServerMessageClient(String server) {
     Uri serverUri = Uri.parse(server);
@@ -65,11 +67,11 @@ class ServerMessageClient {
     _channel?.sink.close();
   }
 
-  addListener(Function callback) {
+  addListener(OnMessageCallback callback) {
     _listeners.add(callback);
   }
 
-  removeListener(Function callback) {
+  removeListener(OnMessageCallback callback) {
     _listeners.remove(callback);
   }
 

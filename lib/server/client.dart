@@ -152,7 +152,7 @@ class ServerClient {
     password = null;
   }
 
-  addListener(Function callback) {
+  addListener(OnMessageCallback callback) {
     if (_messageClient == null) {
       debugPrint("messageClient is null");
     } else {
@@ -160,7 +160,7 @@ class ServerClient {
     }
   }
 
-  removeListener(Function callback) {
+  removeListener(OnMessageCallback callback) {
     if (_messageClient == null) {
       debugPrint("messageClient is null");
     } else {
@@ -182,6 +182,22 @@ class ServerClient {
       debugPrint("_audioPlayerService is null");
     } else {
       _audioPlayerService?.play(uri.toString());
+    }
+  }
+
+  void addListnerPlayerState(OnPlayerStateCallback callback) {
+    if (_audioPlayerService == null) {
+      debugPrint("_audioPlayerService is null");
+    } else {
+      _audioPlayerService?.addListnerPlayerState(callback);
+    }
+  }
+
+  void removeListnerPlayerState(OnPlayerStateCallback callback) {
+    if (_audioPlayerService == null) {
+      debugPrint("_audioPlayerService is null");
+    } else {
+      _audioPlayerService?.removeListnerPlayerState(callback);
     }
   }
 }
