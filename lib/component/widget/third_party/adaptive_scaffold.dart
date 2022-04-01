@@ -3,14 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import '../../../core/extensions.dart';
 
-bool _isLargeScreen(BuildContext context) {
-  return MediaQuery.of(context).size.width > 960.0;
-}
-
-bool _isMediumScreen(BuildContext context) {
-  return MediaQuery.of(context).size.width > 640.0;
-}
 
 /// See bottomNavigationBarItem or NavigationRailDestination
 class AdaptiveScaffoldDestination {
@@ -54,7 +48,7 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
   @override
   Widget build(BuildContext context) {
     // Show a Drawer
-    if (_isLargeScreen(context)) {
+    if (widget.isLargeScreen(context)) {
       return Row(
         children: [
           Drawer(
@@ -95,7 +89,7 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
     }
 
     // Show a navigation rail
-    if (_isMediumScreen(context)) {
+    if (widget.isMediumScreen(context)) {
       return Scaffold(
         appBar: AppBar(
           title: widget.title,
@@ -140,7 +134,7 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
         items: [
           ...widget.destinations.map(
             (d) => BottomNavigationBarItem(
-              icon: Icon(d.icon),
+              icon: Icon(d.icon, color: Colors.redAccent,),
               label: d.title,
             ),
           ),

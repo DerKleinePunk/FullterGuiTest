@@ -5,8 +5,7 @@ import 'package:mnehomeapp/core/client_helper.dart';
 import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-//import 'package:http/http.dart' as http;
-//import 'dart:convert' as convert;
+import '../server/http/http_exceptions.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';
@@ -74,14 +73,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       } else {
         return LoginFailed();
       }
-    } /* This Exception only in dart::io
-      on SocketException catch (exp) {
-      return LoginFailed(message: exp);
     } on HttpException catch (exp) {
-      return LoginFailed(message: exp);
-    } */on FormatException catch (exp) {
+      return LoginFailed(message: exp.toString());
+    } on FormatException catch (exp) {
       return LoginFailed(message: exp.message);
-    } catch (exp) {
+    } on Exception catch (exp) {
       return LoginFailed(message: exp.toString());
     }
   }

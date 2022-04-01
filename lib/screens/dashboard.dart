@@ -1,10 +1,10 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:mnehomeapp/core/client_helper.dart';
-import 'package:mnehomeapp/core/extensions.dart';
-import 'package:mnehomeapp/component/bootstrap/home_server_bootstrap.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../component/widget/third_party/adaptive_scaffold.dart';
+import '../component/widget/automation_form.dart';
+import '../core/automation_panel_controller.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -19,12 +19,15 @@ class _DashboardState extends State<Dashboard> {
 
   final TextEditingController _msgtext = TextEditingController();
   bool _isPlaying = false;
-  
+  late AutomationPanelController _panelController;
+
   @override
   void initState() {
     _msgtext.text = "";
     CoreClientHelper.getClient().addListener(_onWebSocketMessage);
     CoreClientHelper.getClient().addListnerPlayerState(_onPLayerState);
+    _panelController = AutomationPanelController();
+    _panelController.init();
     super.initState();
   }
 
@@ -32,35 +35,37 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     String title = HomeServerLocalizations.of(context)!.titleDashboard;
     return AdaptiveScaffold(
-      title: Text(title),
-      actions: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed:() async {
+        title: Text(title),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: IconButton(
+                icon: const Icon(Icons.logout),
+                onPressed: () async {
                   await CoreClientHelper.getClient().removeSessionIfExists();
                   await CoreClientHelper.clearAuthStorage();
                   await Navigator.of(context).pushReplacementNamed('dashboard');
-                }
+                }),
           ),
-        ),
-      ],
-      currentIndex: _pageIndex,
-      destinations: const [
-        AdaptiveScaffoldDestination(title: 'Home', icon: Icons.home),
-        AdaptiveScaffoldDestination(title: 'Entries', icon: Icons.list),
-        AdaptiveScaffoldDestination(title: 'Settings', icon: Icons.settings),
-      ],
-      body: _pageAtIndex(_pageIndex),
-      onNavigationIndexChange: (newIndex) {
-        setState(() {
-          _pageIndex = newIndex;
-        });
-      },
-      floatingActionButton: null
-          //_hasFloatingActionButton ? _buildFab(context) : null,
-    );
+        ],
+        currentIndex: _pageIndex,
+        destinations: const [
+          AdaptiveScaffoldDestination(title: 'Home', icon: Icons.home),
+          AdaptiveScaffoldDestination(title: 'Entries', icon: Icons.list),
+          AdaptiveScaffoldDestination(title: 'Settings', icon: Icons.settings),
+          AdaptiveScaffoldDestination(
+              title: 'Wohnzimmer', icon: Icons.cached_sharp),
+          //AdaptiveScaffoldDestination(title: 'Offenstall', icon: Icons.add_photo_alternate),
+        ],
+        body: _pageAtIndex(_pageIndex),
+        onNavigationIndexChange: (newIndex) {
+          setState(() {
+            _pageIndex = newIndex;
+          });
+        },
+        floatingActionButton: null
+        //_hasFloatingActionButton ? _buildFab(context) : null,
+        );
   }
 
   Widget _pageAtIndex(int index) {
@@ -68,11 +73,22 @@ class _DashboardState extends State<Dashboard> {
       return dashboardBody();
     }
 
-    /*if (index == 1) {
-      return const EntriesPage();
-    }*/
+    if (index == 1) {
+      //return const EntriesPage();
+      return const Center(child: Text('Entries page'));
+    }
 
-    return const Center(child: Text('Settings page'));
+    if (index == 2) {
+      //return const EntriesPage();
+      return const Center(child: Text('Settings page'));
+    }
+
+    if (index == 3) {
+      //return const EntriesPage();
+      return AutomationForm(_panelController);
+    }
+
+    return const Center(child: Text('Error'));
   }
 
   /*@override

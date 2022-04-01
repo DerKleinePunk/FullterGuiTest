@@ -11,6 +11,8 @@ import 'http/http_stub.dart'
 
 import 'message_stream.dart';
 import '../core/audioplayer.dart';
+import 'http/api_http_client.dart';
+import 'http/http_exceptions.dart';
 
 class ServerClient {
   String serverUrl;
@@ -24,6 +26,7 @@ class ServerClient {
   AudioPlayerService? _audioPlayerService;
 
   final http.Client httpClient = getClient();
+  final ApiHttpClient apiHttpClient = ApiHttpClient();
 
   ServerClient(this.serverUrl, {this.username, this.password});
 
@@ -39,6 +42,7 @@ class ServerClient {
     if (header != null) {
       headerForRequest.addAll(header);
     }
+    //Todo Soleved Cookie Problem
     /*final cookieHeader = cookieJar?.header;
         if (cookieHeader != null) {
           headerForRequest.addAll(cookieHeader);
@@ -76,8 +80,6 @@ class ServerClient {
     };
 
     var sendString = jsonEncode(requestBody);
-    //debugPrint(sendString);
-    //log('log: sendString');
     final response = await httpClient.post(
       HomeServerEndpoints.combine(serverUrl, HomeServerEndpoints.session),
       body: sendString,
@@ -118,7 +120,7 @@ class ServerClient {
         lastSessionRequest!.difference(DateTime.now()).inMinutes <
             ensureSessionsEveryXMinutes) return true;
 
-    final authTest = await httpClient.get(
+    /*final authTest = await httpClient.get(
       HomeServerEndpoints.combine(serverUrl, HomeServerEndpoints.session),
     );
 
@@ -131,7 +133,22 @@ class ServerClient {
           return true;
         }
       }
+    }*/
+
+    try {
+      final authState = await apiHttpClient.get(
+          HomeServerEndpoints.combine(serverUrl, HomeServerEndpoints.session));
+      if (authState != null) {
+        if (authState['userCtx']['name'] != null) {
+          lastSessionRequest = DateTime.now();
+          username = authState['userCtx']['name'];
+          return true;
+        }
+      }
+    } on HttpException catch (exp) {
+      debugPrint(exp.toString());
     }
+
     lastSessionRequest = null;
     return false;
   }
