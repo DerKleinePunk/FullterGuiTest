@@ -2,9 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:flutter/material.dart';
 import '../../../core/extensions.dart';
-
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 /// See bottomNavigationBarItem or NavigationRailDestination
 class AdaptiveScaffoldDestination {
@@ -77,7 +76,7 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
           ),
           Expanded(
             child: Scaffold(
-              appBar: AppBar(
+              appBar: NeumorphicAppBar(
                 actions: widget.actions,
               ),
               body: widget.body,
@@ -91,7 +90,7 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
     // Show a navigation rail
     if (widget.isMediumScreen(context)) {
       return Scaffold(
-        appBar: AppBar(
+        appBar: NeumorphicAppBar(
           title: widget.title,
           actions: widget.actions,
         ),
@@ -126,7 +125,7 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
     // Show a bottom app bar
     return Scaffold(
       body: widget.body,
-      appBar: AppBar(
+      appBar: NeumorphicAppBar(
         title: widget.title,
         actions: widget.actions,
       ),
@@ -134,7 +133,7 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
         items: [
           ...widget.destinations.map(
             (d) => BottomNavigationBarItem(
-              icon: Icon(d.icon, color: Colors.redAccent,),
+              icon: Icon(d.icon),
               label: d.title,
             ),
           ),

@@ -188,7 +188,11 @@ class AudioPlayerService {
     }
   }
 
-  void _audioPlayerNotificationPaused() async {}
+  void _audioPlayerNotificationPaused() async {
+    for (var callback in _listenersPlayerNotification) {
+      callback(PlayerState.PAUSED);
+    }
+  }
 
   void _audioPlayerPlaying() async {
     for (var callback in _listenersPlayer) {
@@ -203,7 +207,11 @@ class AudioPlayerService {
     }
   }
 
-  void _audioPlayerPaused() async {}
+  void _audioPlayerPaused() async {
+    for (var callback in _listenersPlayer) {
+      callback(PlayerState.PAUSED);
+    }
+  }
 
   void addListnerPlayerState(OnPlayerStateCallback callback) {
     _listenersPlayer.add(callback);
@@ -211,5 +219,12 @@ class AudioPlayerService {
 
   void removeListnerPlayerState(OnPlayerStateCallback callback) {
     _listenersPlayer.remove(callback);
+  }
+
+  void pause() async {
+    int result = await _audioPlayer.pause();
+    if (result != 0) {
+      debugPrint("error pause audioPlayer");
+    }
   }
 }

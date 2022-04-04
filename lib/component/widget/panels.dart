@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 typedef GetStateCallback = bool Function(String id);
 typedef SetStateCallback = void Function(String id, bool value);
 
 class Panels {
   static getSwitchPanel(String title, String id, GetStateCallback getcallback,
-      SetStateCallback setCallback) {
+      SetStateCallback setCallback, bool isOn) {
     return SwitchPanel(title, id, getcallback, setCallback);
   }
 }
@@ -24,34 +24,54 @@ class SwitchPanel extends StatefulWidget {
 }
 
 class _SwitchPanelState extends State<SwitchPanel> {
-  static const String imageUrl =
-      'https://mocah.org/thumbs/268085-wallpaper-1080-2400.jpg';
   @override
   Widget build(BuildContext context) {
+    bool isOn = widget._getcallback(widget._id);
     return InkWell(
-      child: Container(
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: Colors.red[500]!,
-            ),
-            borderRadius: const BorderRadius.all(Radius.circular(10)),
-            /*image: const DecorationImage(
-              image: NetworkImage(imageUrl),
-            )*/
-            color: Colors.yellowAccent,
-          ),
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Text(widget._title),
-            Switch(
-              value: widget._getcallback(widget._id),
-              onChanged: (value) {
-                widget._setcallback(widget._id, value);
-                setState(() {});
-              },
-              activeTrackColor: Colors.lightGreenAccent,
-              activeColor: Colors.green,
-            ),
-          ])),
+      child: Neumorphic(
+          style: NeumorphicStyle(
+              shape: NeumorphicShape.concave,
+              boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(12)),
+              depth: 8,
+              lightSource: LightSource.right,
+              shadowLightColor:
+                  !isOn ? const Color(0xFFEBF6FC) : const Color(0xFF0F9DEF),
+              intensity: 1.0),
+          margin: const EdgeInsets.all(10.0),
+          drawSurfaceAboveChild: false,
+          child: Neumorphic(
+              style: NeumorphicStyle(
+                  shape: NeumorphicShape.concave,
+                  boxShape:
+                      NeumorphicBoxShape.roundRect(BorderRadius.circular(12)),
+                  depth: 8,
+                  lightSource: LightSource.topLeft,
+                  //color: Colors.blueGrey,
+                  border: NeumorphicBorder(
+                    isEnabled: false,
+                    color: !isOn
+                        ? const Color(0xFFEBF6FC)
+                        : const Color(0xFF0F9DEF),
+                    width: 1,
+                  )),
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    NeumorphicText(widget._title,
+                        style: const NeumorphicStyle(
+                            depth: 0, //customize depth here
+                            color: Colors.black),
+                        textStyle: NeumorphicTextStyle(fontSize: 18)),
+                    /*NeumorphicSwitch(
+                      style: const NeumorphicSwitchStyle(
+                          lightSource: LightSource.left),
+                      value: isOn,
+                      onChanged: (value) {
+                        widget._setcallback(widget._id, value);
+                        setState(() {});
+                      },
+                    ),*/
+                  ]))),
       onTap: () {
         widget._setcallback(widget._id, !widget._getcallback(widget._id));
         setState(() {});

@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:mnehomeapp/bloc/login_bloc.dart';
 import 'package:mnehomeapp/component/bootstrap/bootstrap.dart';
 import 'package:mnehomeapp/main.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -77,7 +77,8 @@ class _LoginFormState extends State<LoginForm> {
     }
   }
 
-  Widget buildForm(BuildContext context, bool error, bool maybeCors, String errorMessage) {
+  Widget buildForm(
+      BuildContext context, bool error, bool maybeCors, String errorMessage) {
     final maxWidth = MediaQuery.of(context).size.width;
     return Card(
       child: Container(
@@ -130,12 +131,7 @@ class _LoginFormState extends State<LoginForm> {
                   obscuringCharacter: '*',
                   decoration: InputDecoration(
                     helperText: 'Password',
-                    errorText: error
-                        ? getError(
-                            maybeCors,
-                            errorMessage
-                          )
-                        : null,
+                    errorText: error ? getError(maybeCors, errorMessage) : null,
                   ),
                   validator: (value) {
                     if (value?.isEmpty ?? true) {
@@ -177,10 +173,7 @@ class _LoginFormState extends State<LoginForm> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.green,
-                      ),
+                    NeumorphicButton(
                       onPressed: () {
                         if (_formKey.currentState?.validate() ?? false) {
                           _formKey.currentState?.save();
@@ -198,7 +191,7 @@ class _LoginFormState extends State<LoginForm> {
                       },
                       child: const Text('Login'),
                     ),
-                    ElevatedButton(
+                    NeumorphicButton(
                       onPressed: () {
                         Navigator.of(context).pushNamed('cors');
                       },

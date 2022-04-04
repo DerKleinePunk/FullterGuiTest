@@ -217,6 +217,14 @@ class ServerClient {
       _audioPlayerService?.removeListnerPlayerState(callback);
     }
   }
+
+  void pause() {
+    if (_audioPlayerService == null) {
+      debugPrint("_audioPlayerService is null");
+    } else {
+      _audioPlayerService?.pause();
+    }
+  }
 }
 
 // ignore: constant_identifier_names

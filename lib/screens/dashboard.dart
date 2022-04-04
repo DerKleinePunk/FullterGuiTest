@@ -1,10 +1,10 @@
 import 'package:audioplayers/audioplayers.dart';
-import 'package:flutter/material.dart';
 import 'package:mnehomeapp/core/client_helper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../component/widget/third_party/adaptive_scaffold.dart';
 import '../component/widget/automation_form.dart';
 import '../core/automation_panel_controller.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -200,7 +200,7 @@ class _DashboardState extends State<Dashboard> {
                   )),
                   Container(
                       margin: const EdgeInsets.all(10),
-                      child: ElevatedButton(
+                      child: NeumorphicButton(
                           child: const Icon(Icons.send),
                           onPressed: () {
                             if (_msgtext.text != "") {
@@ -213,7 +213,7 @@ class _DashboardState extends State<Dashboard> {
                           })),
                   Container(
                       margin: const EdgeInsets.all(10),
-                      child: ElevatedButton(
+                      child: NeumorphicButton(
                           child: Icon(!_isPlaying
                               ? Icons.play_circle
                               : Icons.stop_circle),
@@ -251,7 +251,7 @@ class _DashboardState extends State<Dashboard> {
   }
 
   void _pauseAudio() {
-    //TODO Implement
+    CoreClientHelper.getClient().pause();
   }
 
   void _onPLayerState(PlayerState state) {

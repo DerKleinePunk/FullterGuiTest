@@ -11,7 +11,7 @@ class AutomationPanelController {
     for (int i = 0; i < 16; i++) {
       _switchMap["panel" + i.toString()] = false;
       _panels.add(Panels.getSwitchPanel("Panel " + i.toString(),
-          "panel" + i.toString(), switchPanelGet, switchPanelSet));
+          "panel" + i.toString(), switchPanelGet, switchPanelSet, false));
     }
   }
 

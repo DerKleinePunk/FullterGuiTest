@@ -14,8 +14,8 @@ class AutomationForm extends StatelessWidget {
         crossAxisCount: count,
         childAspectRatio: 1.0,
         padding: const EdgeInsets.all(4.0),
-        mainAxisSpacing: 4.0,
-        crossAxisSpacing: 4.0,
+        mainAxisSpacing: 8.0,
+        crossAxisSpacing: 8.0,
         children: panelController.getPanels());
   }
 }
