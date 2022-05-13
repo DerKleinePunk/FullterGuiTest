@@ -32,37 +32,17 @@ class _SwitchPanelState extends State<SwitchPanel> {
           style: NeumorphicStyle(
               shape: NeumorphicShape.concave,
               boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(12)),
-              depth: 8,
-              lightSource: LightSource.right,
-              shadowLightColor:
-                  !isOn ? const Color(0xFFEBF6FC) : const Color(0xFF0F9DEF),
-              intensity: 1.0),
-          margin: const EdgeInsets.all(10.0),
-          drawSurfaceAboveChild: false,
-          child: Neumorphic(
-              style: NeumorphicStyle(
-                  shape: NeumorphicShape.concave,
-                  boxShape:
-                      NeumorphicBoxShape.roundRect(BorderRadius.circular(12)),
-                  depth: 8,
-                  lightSource: LightSource.topLeft,
-                  //color: Colors.blueGrey,
-                  border: NeumorphicBorder(
-                    isEnabled: false,
-                    color: !isOn
-                        ? const Color(0xFFEBF6FC)
-                        : const Color(0xFF0F9DEF),
-                    width: 1,
-                  )),
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    NeumorphicText(widget._title,
-                        style: const NeumorphicStyle(
-                            depth: 0, //customize depth here
-                            color: Colors.black),
-                        textStyle: NeumorphicTextStyle(fontSize: 18)),
-                    /*NeumorphicSwitch(
+              depth: !isOn ? 8 : -6,
+              lightSource: LightSource.topLeft,
+              shadowLightColorEmboss: const Color(0xFFEBF6FC),
+              shadowDarkColorEmboss: const Color(0xFF0F9DEF)),
+          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+            NeumorphicText(widget._title,
+                style: const NeumorphicStyle(
+                    depth: 0, //customize depth here
+                    color: Colors.black),
+                textStyle: NeumorphicTextStyle(fontSize: 18)),
+            /*NeumorphicSwitch(
                       style: const NeumorphicSwitchStyle(
                           lightSource: LightSource.left),
                       value: isOn,
@@ -71,7 +51,7 @@ class _SwitchPanelState extends State<SwitchPanel> {
                         setState(() {});
                       },
                     ),*/
-                  ]))),
+          ])),
       onTap: () {
         widget._setcallback(widget._id, !widget._getcallback(widget._id));
         setState(() {});

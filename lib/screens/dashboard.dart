@@ -3,6 +3,7 @@ import 'package:mnehomeapp/core/client_helper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../component/widget/third_party/adaptive_scaffold.dart';
 import '../component/widget/automation_form.dart';
+import '../component/widget/settings_form.dart';
 import '../core/automation_panel_controller.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
@@ -51,7 +52,6 @@ class _DashboardState extends State<Dashboard> {
         currentIndex: _pageIndex,
         destinations: const [
           AdaptiveScaffoldDestination(title: 'Home', icon: Icons.home),
-          AdaptiveScaffoldDestination(title: 'Entries', icon: Icons.list),
           AdaptiveScaffoldDestination(title: 'Settings', icon: Icons.settings),
           AdaptiveScaffoldDestination(
               title: 'Wohnzimmer', icon: Icons.cached_sharp),
@@ -74,16 +74,11 @@ class _DashboardState extends State<Dashboard> {
     }
 
     if (index == 1) {
-      //return const EntriesPage();
-      return const Center(child: Text('Entries page'));
+      //return const Settings();
+      return SettingsForm();
     }
 
     if (index == 2) {
-      //return const EntriesPage();
-      return const Center(child: Text('Settings page'));
-    }
-
-    if (index == 3) {
       //return const EntriesPage();
       return AutomationForm(_panelController);
     }

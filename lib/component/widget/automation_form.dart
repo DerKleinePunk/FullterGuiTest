@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import '../../core/automation_panel_controller.dart';
 import '../../core/extensions.dart';
 
@@ -13,9 +13,9 @@ class AutomationForm extends StatelessWidget {
     return GridView.count(
         crossAxisCount: count,
         childAspectRatio: 1.0,
-        padding: const EdgeInsets.all(4.0),
-        mainAxisSpacing: 8.0,
-        crossAxisSpacing: 8.0,
+        padding: const EdgeInsets.all(10.0),
+        mainAxisSpacing: 10.0,
+        crossAxisSpacing: 10.0,
         children: panelController.getPanels());
   }
 }
