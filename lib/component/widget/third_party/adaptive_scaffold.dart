@@ -68,6 +68,7 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
                   ),
               ],
             ),
+            backgroundColor: NeumorphicTheme.baseColor(context),
           ),
           VerticalDivider(
             width: 1,
@@ -77,7 +78,9 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
           Expanded(
             child: Scaffold(
               appBar: NeumorphicAppBar(
+                title: widget.title,
                 actions: widget.actions,
+                color: NeumorphicTheme.baseColor(context),
               ),
               body: widget.body,
               floatingActionButton: widget.floatingActionButton,
@@ -91,9 +94,9 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
     if (widget.isMediumScreen(context)) {
       return Scaffold(
         appBar: NeumorphicAppBar(
-          title: widget.title,
-          actions: widget.actions,
-        ),
+            title: widget.title,
+            actions: widget.actions,
+            color: NeumorphicTheme.baseColor(context)),
         body: Row(
           children: [
             NavigationRail(
@@ -108,6 +111,7 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
               ],
               selectedIndex: widget.currentIndex,
               onDestinationSelected: widget.onNavigationIndexChange ?? (_) {},
+              backgroundColor: NeumorphicTheme.baseColor(context),
             ),
             VerticalDivider(
               width: 1,
@@ -126,10 +130,11 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
     return Scaffold(
       body: widget.body,
       appBar: NeumorphicAppBar(
-        title: widget.title,
-        actions: widget.actions,
-      ),
+          title: widget.title,
+          actions: widget.actions,
+          color: NeumorphicTheme.baseColor(context)),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: NeumorphicTheme.baseColor(context),
         items: [
           ...widget.destinations.map(
             (d) => BottomNavigationBarItem(

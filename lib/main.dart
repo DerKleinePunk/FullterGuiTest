@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
       supportedLocales: HomeServerLocalizations.supportedLocales,
       initialRoute: 'dashboard',
       onGenerateRoute: AppRouter.generateRoute,
-      themeMode: ThemeMode.dark,
+      themeMode: ThemeMode.light,
       theme: const NeumorphicThemeData(
         baseColor: Color(0xFFFFFFFF),
         lightSource: LightSource.topLeft,

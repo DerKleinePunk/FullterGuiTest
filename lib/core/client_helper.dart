@@ -16,6 +16,7 @@ class CoreClientHelper {
       {String? username, String? password}) {
     _pillowClient =
         ServerClient(serverUrl, password: password, username: username);
+    
     return getClient();
   }
 
@@ -27,6 +28,4 @@ class CoreClientHelper {
     await preferences.remove('username');
     await preferences.remove('password');
   }
-
-  
 }

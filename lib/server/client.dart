@@ -13,6 +13,7 @@ import 'message_stream.dart';
 import '../core/audioplayer.dart';
 import 'http/api_http_client.dart';
 import 'http/http_exceptions.dart';
+import 'user_settings.dart';
 
 class ServerClient {
   String serverUrl;
@@ -24,6 +25,7 @@ class ServerClient {
   CookieSave? cookieSave;
   ServerMessageClient? _messageClient;
   AudioPlayerService? _audioPlayerService;
+  final UserSesstings _userSesstings = UserSesstings();
 
   final http.Client httpClient = getClient();
   final ApiHttpClient apiHttpClient = ApiHttpClient();
@@ -224,6 +226,10 @@ class ServerClient {
     } else {
       _audioPlayerService?.pause();
     }
+  }
+
+  UserSesstings getUserSesstings() {
+    return _userSesstings;
   }
 }
 

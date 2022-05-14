@@ -1,6 +1,7 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:mnehomeapp/core/client_helper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mnehomeapp/server/user_settings.dart';
 import '../component/widget/third_party/adaptive_scaffold.dart';
 import '../component/widget/automation_form.dart';
 import '../component/widget/settings_form.dart';
@@ -21,7 +22,7 @@ class _DashboardState extends State<Dashboard> {
   final TextEditingController _msgtext = TextEditingController();
   bool _isPlaying = false;
   late AutomationPanelController _panelController;
-
+  
   @override
   void initState() {
     _msgtext.text = "";
@@ -34,7 +35,7 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    String title = HomeServerLocalizations.of(context)!.titleDashboard;
+    String title = _getPageTitel(_pageIndex);
     return AdaptiveScaffold(
         title: Text(title),
         actions: [
@@ -50,11 +51,13 @@ class _DashboardState extends State<Dashboard> {
           ),
         ],
         currentIndex: _pageIndex,
-        destinations: const [
-          AdaptiveScaffoldDestination(title: 'Home', icon: Icons.home),
-          AdaptiveScaffoldDestination(title: 'Settings', icon: Icons.settings),
+        destinations: [
           AdaptiveScaffoldDestination(
-              title: 'Wohnzimmer', icon: Icons.cached_sharp),
+              title: _getPageTitel(0), icon: Icons.home),
+          AdaptiveScaffoldDestination(
+              title: _getPageTitel(1), icon: Icons.settings),
+          AdaptiveScaffoldDestination(
+              title: _getPageTitel(2), icon: Icons.cached_sharp),
           //AdaptiveScaffoldDestination(title: 'Offenstall', icon: Icons.add_photo_alternate),
         ],
         body: _pageAtIndex(_pageIndex),
@@ -75,7 +78,7 @@ class _DashboardState extends State<Dashboard> {
 
     if (index == 1) {
       //return const Settings();
-      return SettingsForm();
+      return const SettingsForm();
     }
 
     if (index == 2) {
@@ -257,6 +260,19 @@ class _DashboardState extends State<Dashboard> {
       _isPlaying = true;
       setState(() {});
     }
+  }
+
+  String _getPageTitel(int pageIndex) {
+    switch (pageIndex) {
+      case 0:
+        return HomeServerLocalizations.of(context)!.titleDashboard0;
+      case 1:
+        return HomeServerLocalizations.of(context)!.titleDashboard1;
+      case 2:
+        return HomeServerLocalizations.of(context)!.titleDashboard2;
+    }
+
+    return "Missing Tile for Index " + pageIndex.toString();
   }
 } // Class
 
