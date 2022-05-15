@@ -45,12 +45,12 @@ class ApiHttpClient {
   dynamic _returnResponse(http.Response response) {
     switch (response.statusCode) {
       case 200:
-        var responseJson = json.decode(response.body.toString());
-        debugPrint(responseJson);
+        debugPrint(response.body);
+        var responseJson = json.decode(response.body);
         return responseJson;
       case 201:
-        var responseJson = json.decode(response.body.toString());
-        debugPrint(responseJson);
+        debugPrint(response.body);
+        var responseJson = json.decode(response.body);
         return responseJson;
       case 400:
         throw BadRequestException(response.body.toString());

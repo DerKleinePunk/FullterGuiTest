@@ -120,6 +120,19 @@ const requestListener = async function (req, res) {
         res.setHeader("Access-Control-Allow-Methods", "DELETE, POST, GET");*/
         req.addListener('end', () => fileResources.serve(req, res)).resume();
         return;
+    } else if(req.url == '/api/automation/pages') {
+
+        const listCookies = parseCookies(req);
+        if(Array.isArray(listCookies)) {
+            console.log(listCookies['SessionId']);
+        } else {
+            console.log("no Cookie");
+        }
+        res.setHeader("Access-Control-Allow-Origin", "http://localhost:8000");
+        res.setHeader("Access-Control-Allow-Credentials", "true");
+        res.setHeader("Access-Control-Allow-Methods", "DELETE, POST, GET");
+        res.writeHead(200);
+        res.end(`[{"description": "Page1 in DB",  "name": "Page1", "icon": "http://localhost:8000/resources/icon1.png"} ]`);
     } else {
         res.setHeader("Content-Type", "application/json");
         res.writeHead(200);

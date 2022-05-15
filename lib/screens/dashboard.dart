@@ -21,7 +21,9 @@ class _DashboardState extends State<Dashboard> {
   final TextEditingController _msgtext = TextEditingController();
   bool _isPlaying = false;
   late AutomationPanelController _panelController;
-  
+  List<AdaptiveScaffoldDestination> _listPages =
+      List<AdaptiveScaffoldDestination>.empty();
+
   @override
   void initState() {
     _msgtext.text = "";
@@ -35,6 +37,11 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     String title = _getPageTitel(_pageIndex);
+    if (_listPages.isEmpty) {
+      _loadDestinations();
+      return const CircularProgressIndicator();
+    }
+
     return AdaptiveScaffold(
         title: Text(title),
         actions: [
@@ -50,15 +57,7 @@ class _DashboardState extends State<Dashboard> {
           ),
         ],
         currentIndex: _pageIndex,
-        destinations: [
-          AdaptiveScaffoldDestination(
-              title: _getPageTitel(0), icon: Icons.home),
-          AdaptiveScaffoldDestination(
-              title: _getPageTitel(1), icon: Icons.settings),
-          AdaptiveScaffoldDestination(
-              title: _getPageTitel(2), icon: Icons.cached_sharp),
-          //AdaptiveScaffoldDestination(title: 'Offenstall', icon: Icons.add_photo_alternate),
-        ],
+        destinations: _listPages,
         body: _pageAtIndex(_pageIndex),
         onNavigationIndexChange: (newIndex) {
           setState(() {
@@ -272,6 +271,23 @@ class _DashboardState extends State<Dashboard> {
     }
 
     return "Missing Tile for Index " + pageIndex.toString();
+  }
+
+  //TODO Make It Aync (It is WebserverCall)
+  void _loadDestinations() async {
+    var result = [
+      AdaptiveScaffoldDestination(title: _getPageTitel(0), icon: Icons.home),
+      AdaptiveScaffoldDestination(
+          title: _getPageTitel(1), icon: Icons.settings),
+      AdaptiveScaffoldDestination(
+          title: _getPageTitel(2), icon: Icons.cached_sharp),
+      //AdaptiveScaffoldDestination(title: 'Offenstall', icon: Icons.add_photo_alternate),
+    ];
+
+    CoreClientHelper.getClient().loadDestinations(result);
+    _listPages = result;
+
+    setState(() {});
   }
 } // Class
 

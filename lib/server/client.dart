@@ -1,8 +1,11 @@
 //https://github.com/Dev-Owl/Caladrius/blob/main/lib/pillowdart/client.dart
 import 'package:flutter/foundation.dart'; //kIsWeb true if Webapp
 import 'package:http/http.dart' as http;
+import 'package:mnehomeapp/component/widget/third_party/adaptive_scaffold.dart';
 import 'package:mnehomeapp/server/cookie_save.dart';
+import 'package:mnehomeapp/server/data/auto_destination.dart';
 import 'dart:convert';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 import 'home_server_endpoints.dart';
 import 'http/http_stub.dart'
@@ -230,6 +233,29 @@ class ServerClient {
 
   UserSesstings getUserSesstings() {
     return _userSesstings;
+  }
+
+  loadDestinations(List<AdaptiveScaffoldDestination> resultList) {
+    final uri = HomeServerEndpoints.combine(
+        serverUrl, HomeServerEndpoints.automation,
+        path3: "pages");
+
+    try
+    {
+      Future.delayed(Duration.zero, () async {
+        var result = await apiHttpClient.get(uri);
+        var autoDestinations = AutoDestinations.fromJson(result);
+        for (var element in autoDestinations.autoDestinations) {
+          var entry = AdaptiveScaffoldDestination(
+              title: element.description, icon: Icons.data_array);
+          resultList.add(entry);
+        }
+      });
+    }
+    catch(exp)
+    {
+      debugPrint(exp.toString());
+    }
   }
 }
 

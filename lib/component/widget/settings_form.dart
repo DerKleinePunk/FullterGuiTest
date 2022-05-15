@@ -1,5 +1,4 @@
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:mnehomeapp/server/user_settings.dart';
 import 'theme_color_selector.dart';
 
 //TODO https://github.com/Idean/Flutter-Neumorphic/blob/54ed5895d831d39943dc53ef0fcdc275bb49cf16/example/lib/lib/ThemeConfigurator.dart
