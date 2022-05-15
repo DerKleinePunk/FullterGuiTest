@@ -1,5 +1,5 @@
 import 'package:mnehomeapp/component/bootstrap/bootstrap.dart';
-//import 'package:mnehomeapp/screens/corsHelp.dart';
+import 'package:mnehomeapp/screens/cors_help.dart';
 import 'package:mnehomeapp/screens/dashboard.dart';
 import 'package:mnehomeapp/component/bootstrap/home_server_bootstrap.dart';
 //import 'package:caladrius/screens/database.dart';
@@ -33,13 +33,16 @@ class AppRouter {
     } else {
       data = (settings.name ?? '').getRoutingData; //route to url
     }
+    
+    debugPrint("generateRoute " + data.route.first);
+
     //Only the first segment defines the route
     switch (data.route.first) {
-      /*case 'cors':
+      case 'cors':
         {
           return pageRoute(CorsHelp(), data);
         }
-      case 'database':
+      /*case 'database':
         {
           //If the database part is missing -> Dashboard
           if (data.route.length == 1) {

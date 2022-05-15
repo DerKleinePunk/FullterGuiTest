@@ -73,6 +73,7 @@ class _LoginFormState extends State<LoginForm> {
     } else if (state is LoginRunning) {
       return const CircularProgressIndicator();
     } else {
+      debugPrint("Login form BadState " + state.toString());
       return const Text('This is not the text you are looking for');
     }
   }

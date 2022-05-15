@@ -1,7 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:mnehomeapp/core/client_helper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:mnehomeapp/server/user_settings.dart';
 import '../component/widget/third_party/adaptive_scaffold.dart';
 import '../component/widget/automation_form.dart';
 import '../component/widget/settings_form.dart';
