@@ -23,7 +23,8 @@ class _DashboardState extends State<Dashboard> {
   late AutomationPanelController _panelController;
   List<AdaptiveScaffoldDestination> _listPages =
       List<AdaptiveScaffoldDestination>.empty();
-
+  List<AdaptiveScaffoldDestination> _webPages =
+      List<AdaptiveScaffoldDestination>.empty();
   @override
   void initState() {
     _msgtext.text = "";
@@ -36,12 +37,59 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    String title = _getPageTitel(_pageIndex);
-    if (_listPages.isEmpty) {
-      _loadDestinations();
-      return const CircularProgressIndicator();
+    if (_listPages.isNotEmpty) {
+      return _mainPage(_webPages);
     }
+    return FutureBuilder<List<AdaptiveScaffoldDestination>>(
+      future: CoreClientHelper.getClient().loadDestinations(),
+      builder: (BuildContext context,
+          AsyncSnapshot<List<AdaptiveScaffoldDestination>> snapshot) {
+        if (snapshot.connectionState == ConnectionState.done &&
+            snapshot.hasData) {
+          _webPages = snapshot.data!;
+          return _mainPage(snapshot.data);
+        } else if (snapshot.connectionState == ConnectionState.done &&
+            snapshot.hasError) {
+          return Center(
+              child: Column(children: <Widget>[
+            const Icon(
+              Icons.error,
+              color: Colors.red,
+              size: 100,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 30),
+              child: Text(
+                'Error: ${snapshot.error}',
+                style: const TextStyle(fontSize: 20),
+              ),
+            )
+          ]));
+        }
+        return Center(
+            child: Column(children: const <Widget>[
+          SizedBox(
+            child: CircularProgressIndicator(
+              color: Colors.blue,
+            ),
+            width: 80,
+            height: 80,
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 30),
+            child: Text(
+              'Retrieving Data',
+              style: TextStyle(fontSize: 20),
+            ),
+          )
+        ]));
+      },
+    );
+  }
 
+  Widget _mainPage(List<AdaptiveScaffoldDestination>? pages) {
+    String title = _getPageTitel(_pageIndex);
+    _mergePages(pages!);
     return AdaptiveScaffold(
         title: Text(title),
         actions: [
@@ -270,24 +318,33 @@ class _DashboardState extends State<Dashboard> {
         return HomeServerLocalizations.of(context)!.titleDashboard2;
     }
 
+    if (pageIndex < _listPages.length) {
+      return _listPages[pageIndex].title;
+    }
+
     return "Missing Tile for Index " + pageIndex.toString();
   }
 
-  //TODO Make It Aync (It is WebserverCall)
   void _loadDestinations() async {
-    var result = [
+    CoreClientHelper.getClient().loadDestinations().then((resultWeb) => () {
+          _mergePages(resultWeb);
+          //setState(() {});
+        });
+  }
+
+  void _mergePages(List<AdaptiveScaffoldDestination> pagesWeb) {
+    var newPagesList = [
       AdaptiveScaffoldDestination(title: _getPageTitel(0), icon: Icons.home),
       AdaptiveScaffoldDestination(
           title: _getPageTitel(1), icon: Icons.settings),
-      AdaptiveScaffoldDestination(
-          title: _getPageTitel(2), icon: Icons.cached_sharp),
-      //AdaptiveScaffoldDestination(title: 'Offenstall', icon: Icons.add_photo_alternate),
     ];
 
-    CoreClientHelper.getClient().loadDestinations(result);
-    _listPages = result;
+    debugPrint("Add ${pagesWeb.length} pages to dashboard");
 
-    setState(() {});
+    for (var entry in pagesWeb) {
+      newPagesList.add(entry);
+    }
+    _listPages = newPagesList;
   }
 } // Class
 

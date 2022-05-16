@@ -235,27 +235,26 @@ class ServerClient {
     return _userSesstings;
   }
 
-  loadDestinations(List<AdaptiveScaffoldDestination> resultList) {
+  Future<List<AdaptiveScaffoldDestination>> loadDestinations() async {
     final uri = HomeServerEndpoints.combine(
         serverUrl, HomeServerEndpoints.automation,
         path3: "pages");
 
-    try
-    {
-      Future.delayed(Duration.zero, () async {
-        var result = await apiHttpClient.get(uri);
-        var autoDestinations = AutoDestinations.fromJson(result);
-        for (var element in autoDestinations.autoDestinations) {
-          var entry = AdaptiveScaffoldDestination(
-              title: element.description, icon: Icons.data_array);
-          resultList.add(entry);
-        }
-      });
+    List<AdaptiveScaffoldDestination> resultList = [];
+
+    try {
+      var result = await apiHttpClient.get(uri);
+      var autoDestinations = AutoDestinations.fromJson(result);
+      for (var element in autoDestinations.autoDestinations) {
+        var entry = AdaptiveScaffoldDestination(
+            title: element.description, icon: Icons.data_array);
+        resultList.add(entry);
+      }
+    } catch (exp) {
+      debugPrint("loadDestinations " + exp.toString());
     }
-    catch(exp)
-    {
-      debugPrint(exp.toString());
-    }
+
+    return resultList;
   }
 }
 
