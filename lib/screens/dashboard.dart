@@ -127,11 +127,9 @@ class _DashboardState extends State<Dashboard> {
       return const SettingsForm();
     }
 
-    if (index == 2) {
-      //return const EntriesPage();
-      return AutomationForm(_panelController);
+    if (index < _listPages.length) {
+      return AutomationForm(_panelController, _listPages[index].name);
     }
-
     return const Center(child: Text('Error'));
   }
 
@@ -314,8 +312,6 @@ class _DashboardState extends State<Dashboard> {
         return HomeServerLocalizations.of(context)!.titleDashboard0;
       case 1:
         return HomeServerLocalizations.of(context)!.titleDashboard1;
-      case 2:
-        return HomeServerLocalizations.of(context)!.titleDashboard2;
     }
 
     if (pageIndex < _listPages.length) {
@@ -325,6 +321,7 @@ class _DashboardState extends State<Dashboard> {
     return "Missing Tile for Index " + pageIndex.toString();
   }
 
+  //TODO Later us this to Update Screen when Pages Updatet in DB (Message Inform Us)
   void _loadDestinations() async {
     CoreClientHelper.getClient().loadDestinations().then((resultWeb) => () {
           _mergePages(resultWeb);
@@ -334,9 +331,10 @@ class _DashboardState extends State<Dashboard> {
 
   void _mergePages(List<AdaptiveScaffoldDestination> pagesWeb) {
     var newPagesList = [
-      AdaptiveScaffoldDestination(title: _getPageTitel(0), icon: Icons.home),
       AdaptiveScaffoldDestination(
-          title: _getPageTitel(1), icon: Icons.settings),
+          title: _getPageTitel(0), icon: Icons.home, name: "internal"),
+      AdaptiveScaffoldDestination(
+          title: _getPageTitel(1), icon: Icons.settings, name: "internal"),
     ];
 
     debugPrint("Add ${pagesWeb.length} pages to dashboard");

@@ -247,7 +247,9 @@ class ServerClient {
       var autoDestinations = AutoDestinations.fromJson(result);
       for (var element in autoDestinations.autoDestinations) {
         var entry = AdaptiveScaffoldDestination(
-            title: element.description, icon: Icons.data_array);
+            title: element.description,
+            icon: Icons.data_array,
+            name: element.name);
         resultList.add(entry);
       }
     } catch (exp) {
@@ -255,6 +257,22 @@ class ServerClient {
     }
 
     return resultList;
+  }
+
+  Future<AutomationPageConfig?> loadAutomationPageConfig(String pageName) async {
+    final uri = HomeServerEndpoints.combine(
+        serverUrl, HomeServerEndpoints.automation,
+        path3: "page/" + pageName);
+
+    try {
+      var result = await apiHttpClient.get(uri);
+      var automationPageConfig = AutomationPageConfig.fromJson(result);
+      return automationPageConfig;
+    } catch (exp) {
+      debugPrint("loadAutomationPageConfig " + exp.toString());
+    }
+
+    return null;
   }
 }
 

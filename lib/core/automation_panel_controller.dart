@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../component/widget/panels.dart';
+import 'package:mnehomeapp/core/client_helper.dart';
 
 class AutomationPanelController {
   final List<Widget> _panels = <Widget>[];
@@ -15,7 +16,7 @@ class AutomationPanelController {
     }
   }
 
-  List<Widget> getPanels() {
+  List<Widget> getPanels(String pageName) {
     return _panels;
   }
 
@@ -25,5 +26,18 @@ class AutomationPanelController {
 
   void switchPanelSet(String id, bool value) {
     _switchMap[id] = value;
+  }
+
+  void loadPage(String pageName) async {
+    CoreClientHelper.getClient()
+        .loadAutomationPageConfig(pageName)
+        .then((value) => (value) {
+              if (value == null) {
+                debugPrint("new Page Config get failed");
+                return;
+              }
+
+              debugPrint("new Page Config get " + value.name);
+            });
   }
 }

@@ -9,10 +9,12 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 class AdaptiveScaffoldDestination {
   final String title;
   final IconData icon;
+  final String name;
 
   const AdaptiveScaffoldDestination({
     required this.title,
     required this.icon,
+    required this.name
   });
 }
 

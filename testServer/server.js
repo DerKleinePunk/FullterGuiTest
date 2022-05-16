@@ -11,6 +11,9 @@ const wsPath = "/messages";
 const file = new FileServer('./pages/');
 const fileResources = new FileServer('./resources/');
 
+fileResources.cache = true;
+fileResources.defaultHeaders["Access-Control-Allow-Origin"] = "http://localhost:8000";
+
 function parseCookies (request) {
     const list = [];
     var cookieHeader = request.headers?.cookie;
@@ -119,7 +122,6 @@ const requestListener = async function (req, res) {
         res.setHeader("Access-Control-Allow-Credentials", "true");
         res.setHeader("Access-Control-Allow-Methods", "DELETE, POST, GET");*/
         req.addListener('end', () => fileResources.serve(req, res)).resume();
-        return;
     } else if(req.url == '/api/automation/pages') {
 
         const listCookies = parseCookies(req);
@@ -132,8 +134,13 @@ const requestListener = async function (req, res) {
         res.setHeader("Access-Control-Allow-Credentials", "true");
         res.setHeader("Access-Control-Allow-Methods", "DELETE, POST, GET");
         res.writeHead(200);
-        res.end(`[{"description": "Page1 in DB",  "name": "Page1", "icon": "http://localhost:8000/resources/icon1.png"} ]`);
+        res.end(`[{"description": "Page 1 Server",  "name": "Page1", "icon": "http://localhost:8000/resources/icon1.png"}, {"description": "Page 2 Server",  "name": "Page2", "icon": "http://localhost:8000/resources/icon2.png"} ]`);
+    } else if(req.url.substring(0, 21) == '/api/automation/page/') {
+        req.url = req.url.substring(21) + ".json";
+        console.log("try send file " + req.url);
+        req.addListener('end', () => fileResources.serve(req, res)).resume();
     } else {
+        console.log('return Default ');
         res.setHeader("Content-Type", "application/json");
         res.writeHead(200);
         res.end(`{"message": "This is a JSON response"}`);
@@ -209,3 +216,5 @@ wss.on("connection", ws => {
         console.log("Some Error occurred")
     }
 });
+
+

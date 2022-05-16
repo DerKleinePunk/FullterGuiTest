@@ -4,11 +4,14 @@ import '../../core/extensions.dart';
 
 class AutomationForm extends StatelessWidget {
   final AutomationPanelController panelController;
+  final String pageName;
 
-  const AutomationForm(this.panelController, {Key? key}) : super(key: key);
+  const AutomationForm(this.panelController, this.pageName, {Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    panelController.loadPage(pageName);
     int count = renderMobileMode(context) ? 3 : 4;
     return GridView.count(
         crossAxisCount: count,
@@ -16,6 +19,6 @@ class AutomationForm extends StatelessWidget {
         padding: const EdgeInsets.all(10.0),
         mainAxisSpacing: 10.0,
         crossAxisSpacing: 10.0,
-        children: panelController.getPanels());
+        children: panelController.getPanels(pageName));
   }
 }

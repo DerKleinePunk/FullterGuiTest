@@ -6,7 +6,6 @@ import 'package:mnehomeapp/component/bootstrap/home_server_bootstrap.dart';
 import 'package:flutter/material.dart';
 
 class AppRouter {
-
   //Create a root that ensures a login/session
   static PageRoute bootstrapRoute(BootCompleted call, RoutingData data) =>
       _FadeRoute(
@@ -33,14 +32,14 @@ class AppRouter {
     } else {
       data = (settings.name ?? '').getRoutingData; //route to url
     }
-    
+
     debugPrint("generateRoute " + data.route.first);
 
     //Only the first segment defines the route
     switch (data.route.first) {
       case 'cors':
         {
-          return pageRoute(CorsHelp(), data);
+          return pageRoute(const CorsHelp(), data);
         }
       /*case 'database':
         {
@@ -58,7 +57,7 @@ class AppRouter {
         }
     }
   }
-  
+
   static PageRoute _default(RoutingData data) {
     return bootstrapRoute(() => const Dashboard(), data);
   }
@@ -85,7 +84,6 @@ class RoutingData {
   RoutingData.home([this.route = const ['dashboard']]) : _queryParameters = {};
 
   String? operator [](String key) => _queryParameters[key];
-
 }
 
 extension StringExtension on String {
