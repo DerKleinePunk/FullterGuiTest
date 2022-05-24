@@ -129,15 +129,20 @@ const requestListener = async function (req, res) {
             console.log(listCookies['SessionId']);
         } else {
             console.log("no Cookie");
+            res.writeHead(401);
+            return;
         }
         res.setHeader("Access-Control-Allow-Origin", "http://localhost:8000");
         res.setHeader("Access-Control-Allow-Credentials", "true");
         res.setHeader("Access-Control-Allow-Methods", "DELETE, POST, GET");
         res.writeHead(200);
-        res.end(`[{"description": "Page 1 Server",  "name": "Page1", "icon": "http://localhost:8000/resources/icon1.png"}, {"description": "Page 2 Server",  "name": "Page2", "icon": "http://localhost:8000/resources/icon2.png"} ]`);
+        res.end(`[{"description": "Page 1 Server",  "name": "page1", "icon": "http://localhost:8000/resources/icon1.png"}, {"description": "Page 2 Server",  "name": "page2", "icon": "http://localhost:8000/resources/icon2.png"} ]`);
     } else if(req.url.substring(0, 21) == '/api/automation/page/') {
         req.url = req.url.substring(21) + ".json";
         console.log("try send file " + req.url);
+        res.setHeader("Access-Control-Allow-Origin", "http://localhost:8000");
+        res.setHeader("Access-Control-Allow-Credentials", "true");
+        res.setHeader("Access-Control-Allow-Methods", "DELETE, POST, GET");
         req.addListener('end', () => fileResources.serve(req, res)).resume();
     } else {
         console.log('return Default ');
@@ -172,6 +177,15 @@ const wss = new WebSocketServer({ noServer: true })
 server.on('upgrade', function (request, socket, head) {
     //console.log('Parsing session from request...');
     console.log('Upgrade Socket');
+
+    const listCookies = parseCookies(request);
+    if(Array.isArray(listCookies)) {
+        console.log(listCookies['SessionId']);
+    } else {
+        console.log("no Cookie");
+        res.writeHead(401);
+        return;
+    }
 
     wss.handleUpgrade(request, socket, head, function (ws) {
         wss.emit('connection', ws, request);

@@ -40,7 +40,10 @@ class AutomationElement {
       {required this.description, required this.id, required this.typeName});
 
   factory AutomationElement.fromJson(Map<String, dynamic> json) {
-    return AutomationElement(description: json['description'], id: json['id'], typeName: json['typeName']);
+    return AutomationElement(
+        description: json['description'],
+        id: json['id'],
+        typeName: json['typeName']);
   }
 }
 
@@ -52,7 +55,12 @@ class AutomationPageConfig {
 
   factory AutomationPageConfig.fromJson(Map<String, dynamic> json) {
     var elementsIntern = json['elements']
-        .map<AutomationElement>((json) => AutomationElement.fromJson(json));
+        .map<AutomationElement>((json) => AutomationElement.fromJson(json))
+        .toList();
+    /*List<AutomationElement> elementsIntern = List.empty();
+    for (var entry in elementsJson.automationElement) {
+      elementsIntern.add(entry);
+    }*/
 
     return AutomationPageConfig(name: json['name'], elements: elementsIntern);
   }

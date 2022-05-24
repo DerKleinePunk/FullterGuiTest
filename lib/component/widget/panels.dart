@@ -15,6 +15,7 @@ class SwitchPanel extends StatefulWidget {
   final String _id;
   final GetStateCallback _getcallback;
   final SetStateCallback _setcallback;
+
   const SwitchPanel(this._title, this._id, this._getcallback, this._setcallback,
       {Key? key})
       : super(key: key);

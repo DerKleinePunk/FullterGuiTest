@@ -280,6 +280,7 @@ class _DashboardState extends State<Dashboard> {
   @override
   void dispose() {
     CoreClientHelper.getClient().removeListener(_onWebSocketMessage);
+    _panelController.dispose();
     super.dispose();
   }
 

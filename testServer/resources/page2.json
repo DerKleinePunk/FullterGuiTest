@@ -1,0 +1,12 @@
+{
+    "name" : "page2",
+    "elements" : [{
+        "description" : "Button21",
+        "id" : "B01",
+        "typeName" : "ONOFFBUTTON"
+    }, {
+        "description" : "Button22",
+        "id" : "B02",
+        "typeName" : "ONOFFBUTTON"
+    }]
+}
